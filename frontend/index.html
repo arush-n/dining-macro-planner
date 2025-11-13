@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dining Macro Planner - Smart Meal Planning</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Dining Macro Planner</h1>
+            </div>
+            <div class="user-info">
+                <input type="text" id="user-id-header" placeholder="Your Name" class="user-input">
+                <div class="dining-selector">
+                    <select id="dining-hall-header" class="styled-select">
+                        <option value="J2">J2 Dining</option>
+                        <option value="JCL">JCL Dining</option>
+                        <option value="Kins">Kinsolving</option>
+                    </select>
+                    <select id="meal-type-header" class="styled-select">
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch" selected>Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+
+        <!-- Left Panel: Calculator & Food Browser -->
+        <div class="left-panel">
+
+            <!-- Macro Calculator -->
+            <div class="calculator-section card">
+                <div class="card-header">
+                    <i class="fas fa-calculator"></i>
+                    <h2>Macro Calculator</h2>
+                </div>
+
+                <div class="macro-targets">
+                    <div class="macro-input-group">
+                        <label>
+                            <i class="fas fa-drumstick-bite" style="color: #e74c3c;"></i>
+                            Protein
+                        </label>
+                        <div class="input-with-unit">
+                            <input type="number" id="protein-target" value="40" min="0" max="300">
+                            <span class="unit">g</span>
+                        </div>
+                    </div>
+
+                    <div class="macro-input-group">
+                        <label>
+                            <i class="fas fa-bread-slice" style="color: #f39c12;"></i>
+                            Carbs
+                        </label>
+                        <div class="input-with-unit">
+                            <input type="number" id="carbs-target" value="150" min="0" max="500">
+                            <span class="unit">g</span>
+                        </div>
+                    </div>
+
+                    <div class="macro-input-group">
+                        <label>
+                            <i class="fas fa-cheese" style="color: #3498db;"></i>
+                            Fats
+                        </label>
+                        <div class="input-with-unit">
+                            <input type="number" id="fats-target" value="50" min="0" max="200">
+                            <span class="unit">g</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-actions">
+                    <button id="auto-match-btn" class="btn btn-primary">
+                        <i class="fas fa-magic"></i> Auto-Match Foods
+                    </button>
+                    <button id="load-foods-btn" class="btn btn-secondary">
+                        <i class="fas fa-sync-alt"></i> Load Available Foods
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Selection Summary -->
+            <div class="selection-summary card">
+                <div class="card-header">
+                    <i class="fas fa-clipboard-check"></i>
+                    <h3>Your Selection</h3>
+                    <button id="clear-selection-btn" class="btn-icon">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+
+                <div class="macro-progress">
+                    <div class="macro-bar">
+                        <div class="macro-bar-label">
+                            <span>Protein</span>
+                            <span id="protein-current">0g / 40g</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="protein-progress" class="progress-fill protein"></div>
+                        </div>
+                    </div>
+
+                    <div class="macro-bar">
+                        <div class="macro-bar-label">
+                            <span>Carbs</span>
+                            <span id="carbs-current">0g / 150g</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="carbs-progress" class="progress-fill carbs"></div>
+                        </div>
+                    </div>
+
+                    <div class="macro-bar">
+                        <div class="macro-bar-label">
+                            <span>Fats</span>
+                            <span id="fats-current">0g / 50g</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="fats-progress" class="progress-fill fats"></div>
+                        </div>
+                    </div>
+
+                    <div class="total-calories">
+                        <i class="fas fa-fire"></i>
+                        <span>Total Calories: <strong id="total-calories">0</strong></span>
+                    </div>
+                </div>
+
+                <div id="selected-foods-list" class="selected-foods">
+                    <!-- Selected foods will appear here -->
+                </div>
+
+                <button id="save-meal-btn" class="btn btn-success btn-block">
+                    <i class="fas fa-save"></i> Save This Meal
+                </button>
+            </div>
+
+            <!-- Available Foods Table -->
+            <div class="foods-browser card">
+                <div class="card-header">
+                    <i class="fas fa-table"></i>
+                    <h3>Available Foods</h3>
+                    <div class="filter-controls">
+                        <input type="text" id="food-search" placeholder="Search foods..." class="search-input">
+                        <select id="sort-by" class="mini-select">
+                            <option value="name">Name</option>
+                            <option value="protein">Protein</option>
+                            <option value="carbs">Carbs</option>
+                            <option value="fats">Fats</option>
+                            <option value="confidence">Confidence</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="foods-table" class="foods-table">
+                        <thead>
+                            <tr>
+                                <th>Food</th>
+                                <th><i class="fas fa-drumstick-bite"></i> Protein</th>
+                                <th><i class="fas fa-bread-slice"></i> Carbs</th>
+                                <th><i class="fas fa-cheese"></i> Fats</th>
+                                <th><i class="fas fa-fire"></i> Cal</th>
+                                <th><i class="fas fa-star"></i> Conf.</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="foods-table-body">
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>Click "Load Available Foods" to see options</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: AI Chat -->
+        <div class="right-panel">
+            <div class="chat-container card">
+                <div class="card-header">
+                    <i class="fas fa-robot"></i>
+                    <h2>AI Meal Assistant</h2>
+                    <div class="chat-status">
+                        <span class="status-dot online"></span>
+                        <span>Online</span>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message assistant">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <strong>AI Assistant</strong>
+                                <span class="message-time">Just now</span>
+                            </div>
+                            <p>👋 Hello! I'm your AI meal planning assistant powered by Google Gemini.</p>
+                            <p>I can help you:</p>
+                            <ul>
+                                <li>Find meal combinations that hit your macro targets</li>
+                                <li>Suggest alternatives based on your preferences</li>
+                                <li>Explain nutrition information</li>
+                                <li>Adjust recommendations in real-time</li>
+                            </ul>
+                            <p>Try asking: <em>"Suggest a high-protein lunch"</em> or <em>"What can I eat for breakfast with 150g carbs?"</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="quick-action-btn" data-prompt="Suggest a meal that hits my macro targets">
+                        <i class="fas fa-bullseye"></i> Hit My Targets
+                    </button>
+                    <button class="quick-action-btn" data-prompt="What are the highest protein foods available?">
+                        <i class="fas fa-drumstick-bite"></i> High Protein
+                    </button>
+                    <button class="quick-action-btn" data-prompt="Suggest a low-carb meal option">
+                        <i class="fas fa-leaf"></i> Low Carb
+                    </button>
+                    <button class="quick-action-btn" data-prompt="What vegetarian options are available?">
+                        <i class="fas fa-seedling"></i> Vegetarian
+                    </button>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="typing-indicator hidden" id="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <textarea
+                            id="chat-input"
+                            placeholder="Ask me anything about meal planning..."
+                            rows="1"
+                        ></textarea>
+                        <button id="send-chat-btn" class="btn-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Recommendations Panel -->
+            <div class="ai-suggestions card">
+                <div class="card-header">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Smart Suggestions</h3>
+                </div>
+                <div id="ai-suggestions-content" class="suggestions-content">
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <p>Ask the AI assistant for meal suggestions!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="save-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Save Your Meal</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Rate your meal selection:</p>
+                <div class="rating-stars">
+                    <i class="far fa-star" data-rating="1"></i>
+                    <i class="far fa-star" data-rating="2"></i>
+                    <i class="far fa-star" data-rating="3"></i>
+                    <i class="far fa-star" data-rating="4"></i>
+                    <i class="far fa-star" data-rating="5"></i>
+                </div>
+                <textarea id="meal-notes" placeholder="Any notes about this meal? (optional)" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="confirm-save-meal">Save Meal</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

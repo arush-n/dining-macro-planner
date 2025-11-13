@@ -1,0 +1,1717 @@
+<!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+<!-- fieldfilt.aspx, Version 3.0.0  -->
+<!-- End of Aurora Information Systems Required Text -->
+<!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+<!-- nauserdata.aspx, Version 3.0  -->
+<!-- End of Aurora Information Systems Required Text -->
+<html>
+ <head>
+  <title>
+   This Week's Menus
+  </title>
+  <link href="foodpro_web_ina.css" rel="stylesheet" type="text/css"/>
+ </head>
+ <script language="javascript">
+  function fillQty(num) {    
+    if (document.forms[1].recipe[num].checked) {
+    document.forms[1].QTY[num].value=1;
+    document.forms[1].QTY[num].focus();
+    document.forms[1].QTY[num].select();
+    } else {
+    document.forms[1].QTY[num].value="";
+    }
+  }
+  function checkBox(num) {
+    if (document.forms[1].QTY[num].value != "") {
+    document.forms[1].recipe[num].checked=true
+    } else {
+    document.forms[1].recipe[num].checked=false
+    }
+  }
+  function allowReset() {
+    document.forms[1].Action.value = "";
+    return window.confirm ("Are you sure you want to clear this form?");
+  }
+
+  function allowSend(num)  {
+    document.forms[1].Action.value = "";
+    var RecFlg=0;
+    for(i=0; i < num; i++) {
+      var RecChecked = document.forms[1].recipe[i].checked
+      if (RecChecked) {
+        RecFlg=1;
+        break
+      }
+    }
+    
+    if (RecFlg != 1) {    
+      return false;
+    } else {
+      var NonNumFlg=0;
+      for(i=0; i < num; i++) {      
+        if(document.forms[1].QTY[i].value != "") {
+          if(((document.forms[1].QTY[i].value) != parseFloat(document.forms[1].QTY[i].value)) || (document.forms[1].QTY[i].value < 0) || (document.forms[1].QTY[i].value > 9))   {
+            NonNumFlg=1;
+            break
+          }
+        }
+      }
+      if (NonNumFlg == 1) {      
+        return false;
+      } else {
+        document.forms[1].submit();
+      }
+    }              
+  }
+
+  function allowSave(num) {    
+    var NonNumFlg=0;  
+    for(i=0; i < num; i++) {      
+      if(document.forms[1].QTY[i].value != "") {
+        if(((document.forms[1].QTY[i].value) != parseFloat(document.forms[1].QTY[i].value)) || (document.forms[1].QTY[i].value < 0) || (document.forms[1].QTY[i].value > 9))   {
+          NonNumFlg=1;
+          break
+        }
+      }
+    }
+    if (NonNumFlg == 1) {    
+      return false;
+    } else {
+      document.forms[1].Action.value = "ADDSELECTIONS";
+      document.forms[1].submit();
+    }
+  }
+
+  var popImg = null
+  var curHeight = null
+  var popTop = null
+
+  function openPopImg(picName,windowWidth,windowHeight) {
+    closePopImg();
+    curHeight=screen.availHeight;
+    popTop = eval(curHeight - windowHeight - 45);
+    popImg=window.open(picName, '_new', "toolbar=no,scrollbars=no,resizable=yes,top=" + popTop + ",left='0',width=" + (parseInt(windowWidth)+0) + ",height=" + (parseInt(windowHeight)+0));
+  }
+  function closePopImg(){
+    if(navigator.appName != "Microsoft Internet Explorer" || parseInt(navigator.appVersion) >= 4) if(popImg != null) if(!popImg.closed) popImg.close()
+  }
+  function setStatus(msg){
+    status = msg;
+    return true;
+  }
+  function clearForm(num){
+    if(true) {
+      for(i=0; i < num; i++) {
+        document.forms[1].recipe[i].checked = false;
+        document.forms[1].QTY[i].value = "";    
+        }  
+    }
+  }
+ </script>
+ <body class="longmenubody" onunload="closePopImg();">
+  <table border="0" cellpadding="0" cellspacing="10" width="100%">
+   <tr>
+    <td class="headbody" colspan="2">
+     <center>
+      <table class="headcontainer">
+       <tr>
+        <td align="right" rowspan="2" width="20%">
+         <a href="http://housing.utexas.edu/dining">
+          <img alt="University Housing and Dining" height="28" src="logo.gif" width="170"/>
+         </a>
+        </td>
+        <td align="center" valign="top">
+         <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+           <td>
+            <div class="headsysname">
+             University Housing and Dining
+            </div>
+            <!-- <div class="headtitle">This Week's Menus</div>-->
+            <div class="headlocation">
+             Kins Dining
+            </div>
+            <br/>
+           </td>
+           <td align="center" valign="top">
+            <form action="search.aspx" method="post">
+             <input name="Action" type="hidden" value="SEARCH"/>
+             <input name="strCurSearchLocs" type="hidden" value="03[*]Kins Dining"/>
+             <input name="strCurSearchDays" type="hidden" value="11/12/2025"/>
+             <div class="searchtext">
+              Find Your Favorite Food...
+              <div>
+               <div class="searchtext">
+                <input name="strCurKeywords" type="text" value=""/>
+                <input type="submit" value="Search"/>
+               </div>
+               <div class="searchlink">
+                <a href="search.aspx">
+                 [Advanced Search]
+                </a>
+               </div>
+              </div>
+             </div>
+            </form>
+           </td>
+          </tr>
+         </table>
+        </td>
+       </tr>
+       <tr>
+        <td colspan="2">
+         <div align="right">
+          <script>
+           function clearFilters() {
+             var curMenuhref = location.href;
+	     document.cookie = "SavedAllergens=;Path=/;"
+             document.cookie = "SavedWebCodes=;Path=/;"
+             document.cookie = "SavedIngredients=;Path=/;"
+	     document.location.href="?action=clearfilters&sName=University+Housing+and+Dining&locationNum=03&locationName=Kins+Dining&naFlag=1&WeeksMenus=This+Week%27s+Menus&dtdate=11%2F12%2F2025&mealName=Breakfast";        
+             parent.frames[2].location.href = curMenuhref;
+	}
+          </script>
+          <div class="filtertext">
+           Filter menu items by allergens or dietary preferences...
+          </div>
+          <a href="#" onclick='javascript:window.open("allergenfilter.aspx?strcurlocationnum=03","AllergenFilter","width=650,height=450,location=no,status=no,toolbar=yes,scrollbars=yes,resizable=yes")'>
+           <span class="allergenfilterinclinks">
+            Set Filters
+           </span>
+          </a>
+          <!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+          <!-- allergenfilterinc.aspx, Version 2.9  -->
+          <!-- End of Aurora Information Systems Required Text -->
+         </div>
+        </td>
+       </tr>
+      </table>
+     </center>
+     <!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+     <!-- head.aspx, Version 2.6  -->
+     <!-- End of Aurora Information Systems Required Text -->
+    </td>
+   </tr>
+   <tr>
+    <td class="datebody" valign="top" width="16%">
+     <table align="center" border="0" cellpadding="0" cellspacing="0" width="95%">
+      <tr>
+       <td>
+        <div class="dateselectheader">
+         Select a date:
+        </div>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f11%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Tuesday, November 11
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f12%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Wednesday, November 12
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f13%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Thursday, November 13
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f14%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Friday, November 14
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f15%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Saturday, November 15
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f16%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Sunday, November 16
+         </a>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datechevrons">
+         »
+        </span>
+        <span class="dateselections">
+         <a href="shortmenu.aspx?sName=University+Housing+and+Dining&amp;locationNum=03&amp;locationName=Kins+Dining&amp;naFlag=1&amp;WeeksMenus=This+Week%27s+Menus&amp;myaction=read&amp;dtdate=11%2f17%2f2025" onmouseout="window.status= ' ';" onmouseover="window.status = 'Select a date.'; return true;">
+          Monday, November 17
+         </a>
+        </span>
+       </td>
+      </tr>
+     </table>
+     <br/>
+     <table class="datelegendcontainer">
+      <tr>
+       <td>
+        <div class="datelegendheader">
+         Legend
+        </div>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Beef Icon" height="16" src="LegendImages/Beef.png" width="16"/>
+          =Contains Beef
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+          =Contains Egg
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Fish Icon" height="16" src="LegendImages/Fish.png" width="16"/>
+          =Contains Fish
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+          =Contains Milk
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Peanuts Icon" height="16" src="LegendImages/Peanuts.png" width="16"/>
+          =Contains Peanuts
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Pork Icon" height="16" src="LegendImages/Pork.png" width="16"/>
+          =Contains Pork
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Shellfish Icon" height="16" src="LegendImages/Shellfish.png" width="16"/>
+          =Contains Shellfish
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+          =Contains Soy
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Tree_Nuts Icon" height="16" src="LegendImages/Tree_Nuts.png" width="16"/>
+          =Contains Tree Nuts
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+          =Vegan
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+          =Vegetarian
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+          =Contains Wheat
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Halal Icon" height="16" src="LegendImages/Halal.png" width="16"/>
+          =Halal Friendly
+         </span>
+        </span>
+       </td>
+      </tr>
+      <tr>
+       <td align="left">
+        <span class="datelegendicons">
+         <span style="color: black">
+          <img alt="Sesame Icon" height="16" src="LegendImages/Sesame.png" width="16"/>
+          =Contains Sesame Seeds
+         </span>
+        </span>
+       </td>
+      </tr>
+     </table>
+     <!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+     <!-- date.aspx, Version 2.6  -->
+     <!-- End of Aurora Information Systems Required Text -->
+    </td>
+    <td valign="top" width="84%">
+     <div class="longmenuinstructs">
+      Select multiple menu items for a comprehensive nutritive analysis report or click on individual items for full recipe ingredient listings, allergens and nutrition facts.
+     </div>
+     <div align="CENTER">
+      <table align="center" bgcolor="#FFFFFF" border="1" bordercolor="gray" cellpadding="0" cellspacing="0" width="70%">
+       <form action="nutRpt.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;mealName=Breakfast&amp;sName=University+Housing+and+Dining" method="post" name="menuForm" onreset="return allowReset();" target="_top">
+        <input name="Action" type="hidden" value=""/>
+        <tr>
+         <td class="longmenugridheader" colspan="3" width="71%">
+          <a name="Breakfast">
+           <div class="longmenugridheader">
+            Breakfast Menu for Wednesday, November 12, 2025
+           </div>
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td class="longmenucolheaders">
+          <span class="longmenucolheaders">
+           Recipe Description
+          </span>
+         </td>
+         <td class="longmenucolheaders">
+          <span class="longmenucolheaders">
+           Qty
+          </span>
+         </td>
+         <td class="longmenucolheaders">
+          <span class="longmenucolheaders">
+           Portion
+          </span>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Breakfast Plant Based --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(0);" type="CHECKBOX" value="211004*1*03"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=211004*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  6" Flour Tortilla
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(0);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(1);" type="CHECKBOX" value="310109*3*03"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=310109*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Beans de Charro
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(1);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(2);" type="CHECKBOX" value="450197*3*03"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=450197*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Chipotle Meatless Chorizo with Fajita Vegetables
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Halal Icon" height="16" src="LegendImages/Halal.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(2);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(3);" type="CHECKBOX" value="083002*2*03"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=083002*2" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Plant-based Breakfast Patty
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(3);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           2 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(4);" type="CHECKBOX" value="061011*4*03"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=061011*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Veggie Breakfast Scramble
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(4);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Soup n Co. --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(5);" type="CHECKBOX" value="300597*4*07"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=300597*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Hot Hearty Oatmeal
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(5);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(6);" type="CHECKBOX" value="014047*1*07"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=014047*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Oatmeal Topping Bar
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Tree_Nuts Icon" height="16" src="LegendImages/Tree_Nuts.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(6);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 serving
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Yogurt Bar --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(7);" type="CHECKBOX" value="201002*1*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=201002*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Banana
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(7);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(8);" type="CHECKBOX" value="201037*1*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=201037*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Blueberries
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(8);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(9);" type="CHECKBOX" value="201512*4*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=201512*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Cantaloupe
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(9);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(10);" type="CHECKBOX" value="201510*4*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=201510*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Cubed Pineapples
+                 </a>
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(10);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(11);" type="CHECKBOX" value="201028*1*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=201028*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Fresh Orange
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(11);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(12);" type="CHECKBOX" value="240060*1*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=240060*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Gala Apple
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(12);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(13);" type="CHECKBOX" value="048505*3*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=048505*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Plain Greek Yogurt
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(13);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(14);" type="CHECKBOX" value="205017*3*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=205017*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Sliced Canned Pears
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(14);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(15);" type="CHECKBOX" value="048503*3*09"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=048503*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Vanilla Yogurt
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(15);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Desserts --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(16);" type="CHECKBOX" value="181076*1*10"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=181076*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Honeybun Cake
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(16);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 slice
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(17);" type="CHECKBOX" value="181092*1*10"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=181092*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Vegan Raspberry Coffee Muffin
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(17);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Breakfast Offerings --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(18);" type="CHECKBOX" value="061001*1*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=061001*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Hard Boiled Egg
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(18);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(19);" type="CHECKBOX" value="191003*1*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=191003*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Pancake Syrup
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(19);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 ozL
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(20);" type="CHECKBOX" value="300605*2*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=300605*2" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Pancakes
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(20);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           2 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(21);" type="CHECKBOX" value="155003*2*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=155003*2" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Peppered Cream Gravy
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(21);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           2 ozl
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(22);" type="CHECKBOX" value="061002*4*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=061002*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Scrambled Eggs
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(22);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(23);" type="CHECKBOX" value="161031*3*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=161031*3" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Shredded Hash Browns
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Vegan Icon" height="16" src="LegendImages/Vegan.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(23);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           3 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(24);" type="CHECKBOX" value="081038*4*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=081038*4" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Sliced Breakfast Ham
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Pork Icon" height="16" src="LegendImages/Pork.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(24);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           4 oz
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(25);" type="CHECKBOX" value="214009*1*12"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=214009*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Southern Buttermilk Biscuit
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Wheat Icon" height="16" src="LegendImages/Wheat.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Veggie Icon" height="16" src="LegendImages/Veggie.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(25);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 each
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucolmenucat">
+                 -- Action Station --
+                </div>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td bgcolor="#FFFFFF">
+          <table border="0" cellpadding="0" width="100%">
+           <tr>
+            <td>
+             <table border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+               <td>
+                <div class="longmenucoldispname">
+                 <input name="recipe" onclick="fillQty(26);" type="CHECKBOX" value="301483*1*23"/>
+                 <a href="label.aspx?locationNum=03&amp;locationName=Kins+Dining&amp;dtdate=11%2f12%2f2025&amp;RecNumAndPort=301483*1" onmouseout="window.status= ' ';" onmouseover="window.status = 'Click for label of this item.'; return true;" target="_top">
+                  Made to Order Stuffed Omelet
+                 </a>
+                </div>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Milk Icon" height="16" src="LegendImages/Milk.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Eggs Icon" height="16" src="LegendImages/Eggs.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Soy Icon" height="16" src="LegendImages/Soy.png" width="16"/>
+               </td>
+               <td width="10%">
+                <img align="top" alt="Pork Icon" height="16" src="LegendImages/Pork.png" width="16"/>
+               </td>
+              </tr>
+             </table>
+            </td>
+            <td width="10%">
+            </td>
+           </tr>
+          </table>
+         </td>
+         <td align="center" bgcolor="#FFFFFF">
+          <input maxlength="4" name="QTY" onblur="checkBox(26);" size="4" type="TEXT" value=""/>
+         </td>
+         <td bgcolor="#FFFFFF">
+          <div class="longmenucolportions">
+           1 Serv
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td align="center" colspan="3" height="40">
+          <table border="0" cellpadding="1" cellspacing="5" width="100%">
+           <tr>
+            <td align="center" width="50%">
+             <input onclick="allowSave(27);" type="button" value="Save Selections"/>
+            </td>
+            <td align="right" width="25%">
+             <input ;="" onclick="return allowSend(27)" type="button" value="Show Report"/>
+            </td>
+            <td width="25%">
+             <input onclick="clearForm(27);" type="button" value="Clear Form"/>
+            </td>
+           </tr>
+          </table>
+         </td>
+        </tr>
+       </form>
+      </table>
+      <table align="center" border="0" width="100%">
+       <tr>
+        <td>
+         <div class="longmenufooter">
+          Note that menu offerings are subject to change. Please reference each individual dining venue for the most current offerings.
+         </div>
+        </td>
+       </tr>
+      </table>
+      <table align="center" border="0" width="100%">
+       <tr align="center">
+        <td colspan="3">
+         <a href="#top">
+          Top of Page
+         </a>
+        </td>
+       </tr>
+      </table>
+     </div>
+    </td>
+   </tr>
+  </table>
+ </body>
+</html>
+<!-- The following is required by Aurora Information Systems, DO NOT MODIFY OR REMOVE -->
+<!-- longmenu.aspx, Version 2.9  -->
+<!-- End of Aurora Information Systems Required Text -->

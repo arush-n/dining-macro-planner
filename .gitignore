@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Database
+database/*.db
+database/*.db-journal
+*.sqlite
+*.sqlite3
+
+# API keys and secrets
+.env
+*.key
+*.pem
+
+# Scraped data
+scraper/scraped_foods.json
+scraper/*.json
+
+# Embeddings
+rag/tfidf_vectorizer.pkl
+rag/*.pkl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Frontend build (if you add a build system later)
+frontend/node_modules/
+frontend/dist/
+
+# Misc
+.claude/
