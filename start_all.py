@@ -81,5 +81,5 @@ def start_servers():
         print("👋 All servers stopped")
 
 if __name__ == "__main__":
-    check_requirements()
+    # Skip checks - start immediately
     start_servers()

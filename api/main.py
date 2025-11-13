@@ -17,12 +17,13 @@ sys.path.append(str(Path(__file__).parent.parent))
 from config import DATABASE_PATH, DINING_HALLS, MEAL_TYPES
 from agent.agent import MealPlanningAgent
 from rag.rag_retriever import RAGRetriever
+from scraper.scrape_service import get_scraping_service
 
 # Initialize FastAPI app
 app = FastAPI(
     title="Dining Macro Planner API",
-    description="RAG + Agent powered meal planning system",
-    version="1.0.0"
+    description="RAG + Agent powered meal planning system with web scraping",
+    version="2.0.0"
 )
 
 # Add CORS middleware
@@ -34,9 +35,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize agent and retriever
+# Initialize agent, retriever, and scraping service
 agent = MealPlanningAgent()
 retriever = RAGRetriever()
+scraping_service = get_scraping_service()
 
 # Pydantic models for requests/responses
 class UserPreferences(BaseModel):
@@ -95,18 +97,40 @@ def get_db():
 async def root():
     """Root endpoint"""
     return {
-        "message": "Dining Macro Planner API",
-        "version": "1.0.0",
+        "message": "Dining Macro Planner API - Complete Meal Planning System",
+        "version": "2.0.0",
+        "features": [
+            "AI-Powered Meal Recommendations",
+            "Web Scraping from Dining Halls",
+            "Weekly Meal Planning",
+            "Nutrition Tracking",
+            "User Preferences & History"
+        ],
         "endpoints": {
-            "preferences": "/user/{user_id}/preferences",
-            "recommendations": "/recommendations",
-            "refine": "/refine",
-            "select": "/select",
-            "feedback": "/feedback/food/{food_id}",
-            "rate": "/rate-meal",
-            "foods": "/foods/{dining_hall}/{meal_type}",
-            "summary": "/user/{user_id}/summary"
-        }
+            "user": {
+                "preferences": "/user/{user_id}/preferences",
+                "summary": "/user/{user_id}/summary"
+            },
+            "meal_planning": {
+                "recommendations": "/recommendations",
+                "refine": "/refine",
+                "select": "/select",
+                "rate_meal": "/rate-meal"
+            },
+            "foods": {
+                "get_foods": "/foods/{dining_hall}/{meal_type}",
+                "feedback": "/feedback/food/{food_id}"
+            },
+            "scraping": {
+                "scrape_dining_hall": "/scrape/dining-hall/{dining_hall}",
+                "scrape_specific_meal": "/scrape/meal",
+                "refresh_all": "/scrape/refresh",
+                "scrape_status": "/scrape/status"
+            },
+            "health": "/health"
+        },
+        "dining_halls": DINING_HALLS,
+        "meal_types": MEAL_TYPES
     }
 
 
@@ -444,6 +468,134 @@ async def get_user_summary(user_id: str, days: int = 7):
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
+
+
+# ============================================================================
+# SCRAPING ENDPOINTS
+# ============================================================================
+
+class ScrapeRequest(BaseModel):
+    """Request model for scraping operations"""
+    dining_hall: Optional[str] = None
+    meal_type: Optional[str] = None
+    target_date: Optional[str] = None  # YYYY-MM-DD format
+
+
+@app.post("/scrape/dining-hall/{dining_hall}")
+async def scrape_dining_hall(dining_hall: str, target_date: Optional[str] = None):
+    """
+    Scrape all meals for a specific dining hall
+
+    Args:
+        dining_hall: Dining hall name (J2, JCL, or Kins)
+        target_date: Optional date in YYYY-MM-DD format
+
+    Returns:
+        Scrape results including all foods found
+    """
+    if dining_hall not in DINING_HALLS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid dining hall. Must be one of: {', '.join(DINING_HALLS)}"
+        )
+
+    # Parse date if provided
+    date_obj = None
+    if target_date:
+        try:
+            date_obj = datetime.strptime(target_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+
+    result = scraping_service.scrape_dining_hall(dining_hall, date_obj, save_to_db=True)
+
+    if result['status'] == 'error':
+        raise HTTPException(status_code=500, detail=result['message'])
+
+    return result
+
+
+@app.post("/scrape/meal")
+async def scrape_specific_meal(request: ScrapeRequest):
+    """
+    Scrape a specific meal
+
+    Args:
+        request: Scrape request with dining hall, meal type, and optional date
+
+    Returns:
+        Scrape results for the specific meal
+    """
+    if not request.dining_hall or not request.meal_type:
+        raise HTTPException(
+            status_code=400,
+            detail="dining_hall and meal_type are required"
+        )
+
+    if request.dining_hall not in DINING_HALLS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid dining hall. Must be one of: {', '.join(DINING_HALLS)}"
+        )
+
+    if request.meal_type not in MEAL_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid meal type. Must be one of: {', '.join(MEAL_TYPES)}"
+        )
+
+    # Parse date if provided
+    date_obj = None
+    if request.target_date:
+        try:
+            date_obj = datetime.strptime(request.target_date, "%Y-%m--%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+
+    result = scraping_service.scrape_specific_meal(
+        request.dining_hall,
+        request.meal_type,
+        date_obj,
+        save_to_db=True
+    )
+
+    if result['status'] == 'error':
+        raise HTTPException(status_code=500, detail=result['message'])
+
+    return result
+
+
+@app.post("/scrape/refresh")
+async def refresh_all_data():
+    """
+    Refresh all dining hall data
+    Scrapes all dining halls and all meals
+
+    Returns:
+        Complete refresh results
+    """
+    result = scraping_service.refresh_all_data()
+
+    if result['status'] == 'error':
+        raise HTTPException(status_code=500, detail=result['message'])
+
+    return result
+
+
+@app.get("/scrape/status")
+async def get_scrape_status():
+    """
+    Get current scraping status
+
+    Returns:
+        Statistics about scraped data in the database
+    """
+    result = scraping_service.get_scrape_status()
+
+    if result['status'] == 'error':
+        raise HTTPException(status_code=500, detail=result['message'])
+
+    return result
 
 
 if __name__ == "__main__":

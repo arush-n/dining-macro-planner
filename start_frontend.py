@@ -31,10 +31,10 @@ if __name__ == "__main__":
         print("=" * 70)
         print("FRONTEND SERVER STARTED")
         print("=" * 70)
-        print(f"\n🌐 Frontend running at: http://localhost:{PORT}")
-        print(f"📁 Serving files from: {DIRECTORY}")
-        print("\n📝 Open your browser and go to: http://localhost:3000")
-        print("\n⚠️  Make sure the API server is running on port 8000")
+        print(f"\nFrontend running at: http://localhost:{PORT}")
+        print(f"Serving files from: {DIRECTORY}")
+        print("\nOpen your browser and go to: http://localhost:3000")
+        print("\nMake sure the API server is running on port 8000")
         print("   (Run 'python run_server.py' in another terminal)")
         print("\nPress Ctrl+C to stop the server\n")
         print("=" * 70)
@@ -42,4 +42,4 @@ if __name__ == "__main__":
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\n\n👋 Frontend server stopped")
+            print("\n\nFrontend server stopped")

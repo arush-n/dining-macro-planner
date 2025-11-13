@@ -22,7 +22,8 @@ const state = {
         carbs: 0,
         fats: 0,
         calories: 0
-    }
+    },
+    conversationActive: false  // Track if we're in an active conversation
 };
 
 // ========================================
@@ -65,6 +66,7 @@ function attachEventListeners() {
 
     document.getElementById('dining-hall-header').addEventListener('change', (e) => {
         state.diningHall = e.target.value;
+        handleContextChange();  // Reset conversation when dining hall changes
         if (state.availableFoods.length > 0) {
             loadAvailableFoods();
         }
@@ -72,6 +74,7 @@ function attachEventListeners() {
 
     document.getElementById('meal-type-header').addEventListener('change', (e) => {
         state.mealType = e.target.value;
+        handleContextChange();  // Reset conversation when meal type changes
         if (state.availableFoods.length > 0) {
             loadAvailableFoods();
         }
@@ -562,24 +565,49 @@ async function sendChatMessage() {
     document.getElementById('typing-indicator').classList.remove('hidden');
 
     try {
-        // Call AI API
-        const response = await apiRequest('/recommendations', 'POST', {
-            user_id: state.userId,
-            dining_hall: state.diningHall,
-            meal_type: state.mealType,
-            protein_target: state.targets.protein,
-            carbs_target: state.targets.carbs,
-            fats_target: state.targets.fats
-        });
+        let response;
 
-        // Hide typing indicator
-        document.getElementById('typing-indicator').classList.add('hidden');
+        // Use /refine for follow-up messages, /recommendations for first message
+        if (state.conversationActive) {
+            // Follow-up conversation
+            response = await apiRequest('/refine', 'POST', {
+                user_id: state.userId,
+                dining_hall: state.diningHall,
+                meal_type: state.mealType,
+                message: message
+            });
 
-        // Add AI response to chat
-        addMessageToChat('assistant', response.recommendations);
+            // Hide typing indicator
+            document.getElementById('typing-indicator').classList.add('hidden');
 
-        // Update suggestions panel
-        updateSuggestionsPanel(response.recommendations);
+            // Add AI response to chat
+            addMessageToChat('assistant', response.refined_recommendations);
+
+            // Update suggestions panel
+            updateSuggestionsPanel(response.refined_recommendations);
+        } else {
+            // Initial recommendation request
+            response = await apiRequest('/recommendations', 'POST', {
+                user_id: state.userId,
+                dining_hall: state.diningHall,
+                meal_type: state.mealType,
+                protein_target: state.targets.protein,
+                carbs_target: state.targets.carbs,
+                fats_target: state.targets.fats
+            });
+
+            // Hide typing indicator
+            document.getElementById('typing-indicator').classList.add('hidden');
+
+            // Add AI response to chat
+            addMessageToChat('assistant', response.recommendations);
+
+            // Update suggestions panel
+            updateSuggestionsPanel(response.recommendations);
+
+            // Mark conversation as active
+            state.conversationActive = true;
+        }
 
     } catch (error) {
         document.getElementById('typing-indicator').classList.add('hidden');
@@ -624,6 +652,18 @@ function formatMessageContent(content) {
 function updateSuggestionsPanel(content) {
     const panel = document.getElementById('ai-suggestions-content');
     panel.innerHTML = `<div style="white-space: pre-wrap; line-height: 1.8;">${content}</div>`;
+}
+
+function resetConversation() {
+    state.conversationActive = false;
+    showToast('Conversation reset. Starting fresh!', 'info');
+}
+
+// Automatically reset conversation when context changes significantly
+function handleContextChange() {
+    if (state.conversationActive) {
+        resetConversation();
+    }
 }
 
 // ========================================

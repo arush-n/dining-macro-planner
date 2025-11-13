@@ -46,7 +46,8 @@ class MealPlanningAgent:
                 self.db_tools.get_user_meal_history,
                 self.db_tools.save_meal_plan,
                 self.db_tools.get_foods_for_date,
-                self.db_tools.create_weekly_plan
+                self.db_tools.create_weekly_plan,
+                self.db_tools.scrape_dining_hall_now
             ]
         )
 
@@ -72,7 +73,7 @@ class MealPlanningAgent:
 
 **YOUR CAPABILITIES:**
 You have access to several tools/functions that let you query the database in real-time:
-- get_available_foods: Get current foods available at dining halls
+- get_available_foods: Get current foods available at dining halls from the database
 - search_foods_by_macros: Find foods matching specific macro ranges
 - get_food_by_name: Look up detailed nutrition info for specific foods
 - get_high_protein_foods: Find high-protein options
@@ -81,14 +82,16 @@ You have access to several tools/functions that let you query the database in re
 - save_meal_plan: Save a meal combination for the user
 - get_foods_for_date: Get foods that were available on a specific date
 - create_weekly_plan: Generate a complete weekly meal plan for the user
+- scrape_dining_hall_now: Scrape fresh menu data directly from the dining hall website in real-time
 
 **HOW TO USE TOOLS:**
-1. When the user asks about meals, FIRST call get_available_foods to see what's currently available at their dining hall
-2. If they have specific macro requirements, use search_foods_by_macros to find suitable options
-3. Use the actual data from tool calls to make suggestions - don't make up food items
-4. Always verify nutritional information by calling the appropriate tools
-5. When asked about historical data or specific dates, use get_foods_for_date
-6. When asked to create a weekly plan, use create_weekly_plan to generate a structured plan
+1. When the user asks about TODAY'S meals or current menu, use scrape_dining_hall_now to get the freshest data directly from the dining hall website
+2. For general queries or historical data, use get_available_foods to query the database
+3. If they have specific macro requirements, use search_foods_by_macros to find suitable options
+4. Use the actual data from tool calls to make suggestions - don't make up food items
+5. Always verify nutritional information by calling the appropriate tools
+6. When asked about historical data or specific dates, use get_foods_for_date
+7. When asked to create a weekly plan, use create_weekly_plan to generate a structured plan
 
 **CURRENT CONTEXT:**
 - User ID: {user_id}

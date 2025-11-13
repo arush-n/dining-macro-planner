@@ -11,6 +11,7 @@ from datetime import date, datetime
 
 sys.path.append(str(Path(__file__).parent.parent))
 from config import DATABASE_PATH
+from scraper.scraper import DiningHallScraper
 
 
 class DatabaseTools:
@@ -18,6 +19,7 @@ class DatabaseTools:
 
     def __init__(self):
         self.db_path = DATABASE_PATH
+        self.scraper = DiningHallScraper(db_path=self.db_path, auto_save=True)
 
     def _execute_query(self, query: str, params: tuple = ()) -> List[Dict[str, Any]]:
         """Execute a query and return results as list of dicts"""
@@ -467,6 +469,74 @@ class DatabaseTools:
         except Exception as e:
             return json.dumps({"error": str(e)})
 
+    def scrape_dining_hall_now(
+        self,
+        dining_hall: str,
+        meal_type: Optional[str] = None,
+        refresh: bool = True
+    ) -> str:
+        """
+        Scrape fresh dining hall data in real-time using scraper.py
+        Use this tool when you need the latest menu information for a dining hall
+
+        Args:
+            dining_hall: Dining hall to scrape (J2, JCL, or Kins)
+            meal_type: Specific meal type to scrape (Breakfast, Lunch, or Dinner). If None, scrapes all meals.
+            refresh: Whether to refresh even if data exists (default: True)
+
+        Returns:
+            JSON string with scraping results and fresh food data
+        """
+        try:
+            from scraper.scraper import DINING_HALLS, MEAL_TYPES
+            
+            if dining_hall not in DINING_HALLS:
+                return json.dumps({
+                    "error": f"Invalid dining hall: {dining_hall}",
+                    "valid_halls": list(DINING_HALLS.keys())
+                })
+
+            if meal_type and meal_type not in MEAL_TYPES:
+                return json.dumps({
+                    "error": f"Invalid meal type: {meal_type}",
+                    "valid_types": MEAL_TYPES
+                })
+
+            # Scrape the dining hall
+            if meal_type:
+                # Scrape specific meal
+                foods = self.scraper.scrape_meal(dining_hall, meal_type, target_date=None)
+            else:
+                # Scrape all meals for the dining hall
+                foods = self.scraper.scrape_all_meals(dining_hall, target_date=None)
+
+            # Save to database (scraper is initialized with auto_save=True)
+            if foods:
+                result = {
+                    "status": "success",
+                    "dining_hall": dining_hall,
+                    "meal_type": meal_type or "all meals",
+                    "foods_scraped": len(foods),
+                    "date": str(date.today()),
+                    "foods": foods[:20]  # Return first 20 for brevity
+                }
+            else:
+                result = {
+                    "status": "no_data",
+                    "dining_hall": dining_hall,
+                    "meal_type": meal_type or "all meals",
+                    "message": "No foods found. The dining hall might be closed or the website may be unavailable."
+                }
+
+            return json.dumps(result, indent=2)
+
+        except Exception as e:
+            return json.dumps({
+                "error": str(e),
+                "dining_hall": dining_hall,
+                "meal_type": meal_type
+            })
+
 
 # Tool function declarations for Gemini
 TOOL_FUNCTIONS = {
@@ -689,6 +759,31 @@ TOOL_FUNCTIONS = {
                 }
             },
             "required": ["user_id", "dining_hall"]
+        }
+    },
+    "scrape_dining_hall_now": {
+        "name": "scrape_dining_hall_now",
+        "description": "Scrape fresh dining hall menu data in real-time from the dining hall website. Use this when you need the latest menu information or when the user asks for current/today's menu.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "dining_hall": {
+                    "type": "string",
+                    "description": "The dining hall to scrape (J2, JCL, or Kins)",
+                    "enum": ["J2", "JCL", "Kins"]
+                },
+                "meal_type": {
+                    "type": "string",
+                    "description": "Specific meal type to scrape. If not specified, scrapes all meals.",
+                    "enum": ["Breakfast", "Lunch", "Dinner"]
+                },
+                "refresh": {
+                    "type": "boolean",
+                    "description": "Whether to refresh data even if recent data exists (default: True)",
+                    "default": True
+                }
+            },
+            "required": ["dining_hall"]
         }
     }
 }

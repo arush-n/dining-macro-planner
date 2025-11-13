@@ -4,14 +4,11 @@ Quick server launcher for Dining Macro Planner
 import sys
 import os
 
-# Check if API key is set
+# Check if API key is set (just warn, don't block)
 if not os.getenv("GEMINI_API_KEY"):
     print("WARNING: GEMINI_API_KEY not set!")
-    print("The server will start but recommendations won't work without an API key.")
+    print("AI chat won't work, but other features will work fine.")
     print()
-    response = input("Continue anyway? (y/n): ")
-    if response.lower() != 'y':
-        sys.exit(0)
 
 print("Starting Dining Macro Planner API server...")
 print("API will be available at: http://localhost:8000")

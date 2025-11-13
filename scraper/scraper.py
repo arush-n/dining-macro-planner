@@ -34,12 +34,20 @@ BASE_URL = "https://hf-foodpro.austin.utexas.edu/foodpro/longmenu.aspx"
 class DiningHallScraper:
     """Scraper for dining hall food data using requests and BeautifulSoup"""
 
-    def __init__(self):
-        """Initialize the scraper"""
+    def __init__(self, db_path=None, auto_save=False):
+        """
+        Initialize the scraper
+
+        Args:
+            db_path: Path to database file (optional)
+            auto_save: Whether to automatically save to database (default: False)
+        """
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
+        self.db_path = db_path
+        self.auto_save = auto_save
 
     def build_url(self, dining_hall, meal_type, target_date=None):
         """
