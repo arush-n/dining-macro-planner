@@ -44,7 +44,9 @@ class MealPlanningAgent:
                 self.db_tools.get_high_protein_foods,
                 self.db_tools.get_user_preferences,
                 self.db_tools.get_user_meal_history,
-                self.db_tools.save_meal_plan
+                self.db_tools.save_meal_plan,
+                self.db_tools.get_foods_for_date,
+                self.db_tools.create_weekly_plan
             ]
         )
 
@@ -77,12 +79,16 @@ You have access to several tools/functions that let you query the database in re
 - get_user_preferences: Get user's dietary preferences and macro targets
 - get_user_meal_history: See what meals the user has eaten before
 - save_meal_plan: Save a meal combination for the user
+- get_foods_for_date: Get foods that were available on a specific date
+- create_weekly_plan: Generate a complete weekly meal plan for the user
 
 **HOW TO USE TOOLS:**
 1. When the user asks about meals, FIRST call get_available_foods to see what's currently available at their dining hall
 2. If they have specific macro requirements, use search_foods_by_macros to find suitable options
 3. Use the actual data from tool calls to make suggestions - don't make up food items
 4. Always verify nutritional information by calling the appropriate tools
+5. When asked about historical data or specific dates, use get_foods_for_date
+6. When asked to create a weekly plan, use create_weekly_plan to generate a structured plan
 
 **CURRENT CONTEXT:**
 - User ID: {user_id}
